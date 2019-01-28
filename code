@@ -1,0 +1,81 @@
+##This program will help to solve Mathematical Polynomials by finding some of the factors
+##The polynomial function must be simplified for this program to work.
+
+#FIND THE ZEROS
+#This function takes an input value as a parameter, tests it against
+#the defined function and then returns the result
+def findTheZeros(xInput):
+    ##Calculation of the polynomial 
+    n = 0
+    result = 0
+    for x in range(highestPower + 1):
+        result += ((xInput**(powerList[n]))*coefficientList[n])
+        n += 1
+    return result
+
+##Get Highest Power
+print "Please enter highest power: "
+highestPower = input()
+
+##Create lists and a dictonary
+##This list will hold all coefficients - note that a coefficient of zero means the
+##item doesn't exist in the polynomial (0*anything=0)
+coefficientList = []
+
+#this creates a list of powers that is reversed (polynomials have highest power at
+#beginning of equation
+powerList = [x for x in range(highestPower + 1)][::-1]
+
+#TestList will hold the possible factor values testDict holds the string equivalent of
+#those values - this is so that when the program outputs to the user it is in fraction
+#form
+testList = []
+testDict = {}
+
+#This will hold the defined factors
+zerosList = []
+
+##Get Coefficients for the terms
+for x in range(highestPower + 1):
+    if x == 0:
+        print "Please enter coefficient for 1st term: "
+        coef = input()
+    elif x == 1:
+        print "Please enter coefficient for 2nd term: "
+        coef = input()
+    elif x == 2:
+        print "Please enter coefficient for 3rd term: "
+        coef = input()
+    else:
+        print "please enter coefficient for " + str(x + 1) + "th term: "
+        coef = input()
+    coefficientList.append(coef)
+
+##Find the factors of p and q (p is the leading coefficient, q is constant)
+p = [x for x in range(1, abs(coefficientList[0])+1) if coefficientList[0] % x == 0]
+q = [x for x in range(1, abs(coefficientList[::-1][0])+1) if coefficientList[::-1][0] % x == 0]
+
+##This for loop will find every combination of q/p and will add to testList
+for y in q:
+    for x in p:
+        testItem = float(y)/x
+        if (testItem) not in testList:
+            testList.append(testItem)
+            testList.append(-testItem)
+            testDict[testItem] = str(y) + '/' + str(x)
+            testDict[-testItem] = str(-y) + '/' + str(x)
+
+#This for loop will use findTheZeros() ftn to see if any of the test items are factors of
+#the Polynomial. If they are factors, add them to the zeros list
+for item in testList:
+    a = findTheZeros(item)
+    if a == 0:
+        zerosList.append(testDict[item])
+
+#Print out the results to user - Not in perfect format, but it works just fine. The rest of
+#zeros will have to be found with synthetic division/factoring.  This will find all of the
+#clean factors
+print "Some of the factors are: "
+for x in zerosList:
+    print "(x - " + x + ")"
+
